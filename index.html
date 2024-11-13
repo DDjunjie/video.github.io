@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="在线VIP视频解析工具,支持爱奇艺、腾讯视频、优酷等">
+    <meta name="keywords" content="VIP视频解析,视频解析,VIP视频在线解析">
+    <meta name="author" content="Your Name">
+    <title>VIP视频解析</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background: #f7f7f7;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 16px;
+            padding-top: 40px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .input-box {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid #eeeeee;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2196F3;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #eeeeee;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 12px;
+            background: #ffffff;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2196F3;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:active {
+            background: #1976D2;
+        }
+
+        .video-box {
+            background: #000000;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 56.25%;
+            margin-bottom: 16px;
+            display: none;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .tips {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tips p {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .tips p:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: #2196F3;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px 0;
+            font-size: 12px;
+            color: #999999;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="input-box">
+        <input type="text" id="url" placeholder="粘贴视频链接">
+        <select id="api">
+            <option value="https://jx.m3u8.tv/jiexi/?url=">通用线路</option>
+            <option value="https://jx.jsonplayer.com/player/?url=">稳定线路</option>
+            <option value="https://jx.xmflv.com/?url=">高速线路</option>
+            <option value="https://jx.aidouer.net/?url=">超清线路</option>
+            <option value="https://jx.playerjy.com/?url=">备用线路1</option>
+            <option value="https://jx.quankan.app/?url=">备用线路2</option>
+        </select>
+        <button onclick="parse()">立即解析</button>
+    </div>
+
+    <div class="video-box" id="player">
+        <iframe id="iframe" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <div class="tips">
+        <p>支持：爱奇艺、腾讯视频、优酷等</p>
+        <p>复制视频链接粘贴即可解析</p>
+        <p>如果失败请切换其他线路</p>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 VIP视频解析 - 仅供学习交流使用</p>
+    </div>
+
+    <script>
+        'use strict';
+
+        function parse() {
+            const url = document.getElementById('url').value.trim();
+            const api = document.getElementById('api').value;
+            
+            if (!url) {
+                alert('请输入视频链接');
+                return;
+            }
+
+            try {
+                new URL(url);
+                
+                document.getElementById('player').style.display = 'block';
+                document.getElementById('iframe').src = api + encodeURIComponent(url);
+                
+                document.getElementById('player').scrollIntoView({ behavior: 'smooth' });
+            } catch (e) {
+                alert('请输入正确的视频链接');
+            }
+        }
+
+        document.getElementById('url').addEventListener('paste', function(e) {
+            setTimeout(() => {
+                this.value = this.value.trim();
+            }, 100);
+        });
+
+        document.getElementById('url').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                parse();
+            }
+        });
+
+        if (window !== window.top) {
+            window.top.location.href = window.location.href;
+        }
+    </script>
+</body>
+</html> 
