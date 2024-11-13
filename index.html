@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>选择访问版本</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin: 30px 0;
+            font-size: 24px;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-mobile {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-desktop {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            color: #666;
+        }
+        
+        .device-info {
+            margin-top: 30px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #666;
+            text-align: left;
+        }
+        
+        .device-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>视频解析工具</h1>
+        
+        <div class="button-group">
+            <a href="video.html" class="btn btn-mobile">
+                进入手机版
+            </a>
+            <a href="../video.html" class="btn btn-desktop">
+                进入电脑版
+            </a>
+        </div>
+        
+        <div class="device-info">
+            <p>📱 当前设备信息：</p>
+            <p id="deviceInfo"></p>
+            <p>💡 建议：</p>
+            <p id="suggestion"></p>
+        </div>
+    </div>
+
+    <script>
+        function detectDevice() {
+            const ua = navigator.userAgent;
+            const deviceInfo = document.getElementById('deviceInfo');
+            const suggestion = document.getElementById('suggestion');
+            
+            let deviceType = '未知设备';
+            let suggestText = '建议使用手机版以获得最佳体验';
+            
+            if (/iPhone|iPad|iPod/i.test(ua)) {
+                deviceType = 'iOS设备';
+            } else if (/Android/i.test(ua)) {
+                deviceType = 'Android设备';
+            } else if (/Windows/i.test(ua)) {
+                deviceType = '电脑设备';
+                suggestText = '建议使用电脑版以获得最佳体验';
+            }
+            
+            deviceInfo.textContent = `${deviceType} (${window.innerWidth}x${window.innerHeight})`;
+            suggestion.textContent = suggestText;
+        }
+        
+        window.onload = detectDevice;
+    </script>
+</body>
+</html> 
